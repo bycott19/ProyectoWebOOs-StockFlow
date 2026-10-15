@@ -1,4 +1,3 @@
--- schema.sql (PostgreSQL)
 DROP TABLE IF EXISTS detalle_pedidos CASCADE;
 DROP TABLE IF EXISTS pedidos CASCADE;
 DROP TABLE IF EXISTS productos CASCADE;

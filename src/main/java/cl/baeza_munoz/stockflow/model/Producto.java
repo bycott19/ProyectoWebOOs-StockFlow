@@ -1,9 +1,12 @@
 package cl.baeza_munoz.stockflow.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Data 
 @Entity
 @Table(name = "productos")
 public class Producto {
@@ -33,7 +36,7 @@ public class Producto {
     @Column(name = "stock_minimo", nullable = false)
     private Integer stockMinimo;
 
-    @Column(name = "fecha_actualizacion", nullable = false)
+    @Column(name = "fecha_actualizacion", nullable = false, updatable = false)
     private LocalDateTime fechaActualizacion;
 
     @PrePersist
