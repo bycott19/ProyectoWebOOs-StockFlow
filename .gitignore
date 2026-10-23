@@ -1,4 +1,4 @@
-HELP.md
+﻿HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -33,5 +33,44 @@ out/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
+### VS Code & Editors ###
 .vscode/
+*.code-workspace
+.history/
+*.sublime-project
+*.sublime-workspace
+
+### Entregables y Documentos de la Universidad ###
+entregables/
+entregables/**
+*.pdf
+
+### Variables de Entorno y Secretos (Seguridad Estricta) ###
+.env
+.env.*
+!.env.example
+*.local
+docker-compose.override.yml
+credentials.json
+secrets/
+
+### Docker y Volumenes Locales ###
+postgres_data/
+docker_data/
+
+### Logs y Temporales ###
+*.log
+logs/
+temp/
+tmp/
+
+### Sistema Operativo ###
+Thumbs.db
+[Dd]esktop.ini
+.DS_Store
+*.swp
+*.bak
+
+### Guias de desarrollo local con credenciales / comandos internos ###
+COMANDOS_LOCALES.md
+LOCAL_DEV.md

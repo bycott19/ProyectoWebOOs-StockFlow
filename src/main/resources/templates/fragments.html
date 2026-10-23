@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="color-scheme" content="light">
+    <title th:text="${title}">StockFlow</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header th:fragment="header(activePage)">
+    <a th:href="@{/}" class="logo">
+        <i>S</i>StockFlow
+    </a>
+    <nav>
+        <a th:href="@{/}" th:class="${activePage == 'dash'} ? 'on' : ''">Inicio</a>
+        <a th:href="@{/productos}" th:class="${activePage == 'prod'} ? 'on' : ''">Productos</a>
+        <a th:href="@{/stock-bajo}" th:class="${activePage == 'alert'} ? 'on' : ''">Stock bajo</a>
+    </nav>
+</header>
+
+</body>
+</html>
