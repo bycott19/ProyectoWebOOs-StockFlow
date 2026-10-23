@@ -11,35 +11,49 @@
             <h1>Hola, equipo de bodega</h1>
             <p>Así va el inventario y los pedidos de hoy</p>
         </div>
-        <a th:href="@{/productos}" class="btn">Gestionar inventario</a>
+        <div style="display: flex; gap: 10px;">
+            <a th:href="@{/pedidos/nuevo}" class="btn">+ Nuevo pedido</a>
+            <a th:href="@{/productos}" class="btn o">Catálogo</a>
+        </div>
     </div>
 
     <div class="grid g4" style="margin-bottom: 22px">
-        <div class="kpi k3">
-            <span>Productos activos</span>
-            <b th:text="${productosCount}">0</b>
-            <em>Registrados en catálogo</em>
-        </div>
-        <div class="kpi k2">
-            <span>Pedidos pendientes</span>
-            <b th:text="${pedidosPendientesCount}">0</b>
-            <em>Por preparar y enviar</em>
-        </div>
-        <div class="kpi k4">
-            <span>Clientes</span>
-            <b th:text="${clientesCount}">0</b>
-            <em>Clientes en GlobalRetail</em>
-        </div>
-        <div class="kpi k1">
-            <span>Bajo stock mínimo</span>
-            <b th:text="${stockBajoCount}">0</b>
-            <em>Requieren reposición</em>
-        </div>
+        <a th:href="@{/productos}" style="text-decoration: none; color: inherit;">
+            <div class="kpi k3">
+                <span>Productos activos</span>
+                <b th:text="${productosCount}">0</b>
+                <em>Registrados en catálogo</em>
+            </div>
+        </a>
+        <a th:href="@{/pedidos}" style="text-decoration: none; color: inherit;">
+            <div class="kpi k2">
+                <span>Pedidos pendientes</span>
+                <b th:text="${pedidosPendientesCount}">0</b>
+                <em>Por preparar y enviar</em>
+            </div>
+        </a>
+        <a th:href="@{/clientes}" style="text-decoration: none; color: inherit;">
+            <div class="kpi k4">
+                <span>Clientes</span>
+                <b th:text="${clientesCount}">0</b>
+                <em>Clientes en GlobalRetail</em>
+            </div>
+        </a>
+        <a th:href="@{/stock-bajo}" style="text-decoration: none; color: inherit;">
+            <div class="kpi k1">
+                <span>Bajo stock mínimo</span>
+                <b th:text="${stockBajoCount}">0</b>
+                <em>Requieren reposición</em>
+            </div>
+        </a>
     </div>
 
     <div class="grid g2">
         <div class="card">
-            <h3>Últimos pedidos registrados</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3>Últimos pedidos registrados</h3>
+                <a th:href="@{/pedidos}" class="btn o sm">Ver todos</a>
+            </div>
             <div class="tw">
                 <table>
                     <thead>
@@ -49,11 +63,12 @@
                             <th>Fecha</th>
                             <th>Total</th>
                             <th>Estado</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:if="${#lists.isEmpty(ultimosPedidos)}">
-                            <td colspan="5" style="text-align:center; padding: 20px; color: var(--mu);">No hay pedidos registrados aún</td>
+                            <td colspan="6" style="text-align:center; padding: 20px; color: var(--mu);">No hay pedidos registrados aún</td>
                         </tr>
                         <tr th:each="p : ${ultimosPedidos}">
                             <td><b th:text="'#' + ${p.id}">#1</b></td>
@@ -62,8 +77,11 @@
                             <td><b th:text="'$' + ${#numbers.formatDecimal(p.total, 0, 'POINT', 0, 'POINT')}">$0</b></td>
                             <td>
                                 <span class="tag" 
-                                      th:classappend="${p.estado == 'PENDIENTE' ? 'pe' : (p.estado == 'PAGADO' ? 'ok' : (p.estado == 'ENVIADO' ? 'ok' : 'er'))}"
+                                      th:classappend="${p.estado == 'PENDIENTE' ? 'pe' : (p.estado == 'PAGADO' ? 'wa' : (p.estado == 'ENVIADO' ? 'ok' : 'er'))}"
                                       th:text="${p.estado}">PENDIENTE</span>
+                            </td>
+                            <td>
+                                <a th:href="@{'/pedidos/' + ${p.id}}" class="btn o sm">Ver</a>
                             </td>
                         </tr>
                     </tbody>

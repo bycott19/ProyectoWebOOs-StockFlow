@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="~{fragments :: head('StockFlow - Historial de Pedidos')}"></head>
+
+<body>
+
+    <header th:replace="~{fragments :: header('ped')}"></header>
+
+    <main>
+        <div class="hero h1">
+            <div>
+                <h1 th:text="${clienteSeleccionado != null ? 'Pedidos de ' + clienteSeleccionado.nombre : 'Historial de Pedidos'}">
+                    Historial de Pedidos
+                </h1>
+                <p>Seguimiento de compras, estados de preparación y despacho</p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a th:if="${clienteSeleccionado == null}" th:href="@{/pedidos/exportar-csv}" class="btn o">📥 Exportar reporte CSV</a>
+                <a th:if="${clienteSeleccionado != null}" th:href="@{'/pedidos/cliente/' + ${clienteSeleccionado.id} + '/exportar-csv'}" class="btn o">📥 Exportar reporte CSV</a>
+                <a th:href="@{/pedidos/nuevo}" class="btn">+ Nuevo pedido</a>
+            </div>
+        </div>
+
+        <!-- Ficha de Cliente si está filtrado -->
+        <div th:if="${clienteSeleccionado != null}" class="card"
+            style="margin-bottom: 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <span class="av" style="width: 52px; height: 52px; font-size: 18px;"
+                th:text="${#strings.length(clienteSeleccionado.nombre) >= 2 ? #strings.substring(clienteSeleccionado.nombre, 0, 2).toUpperCase() : 'CL'}">CR</span>
+            <div style="flex: 1;">
+                <b style="font-size: 19px;" th:text="${clienteSeleccionado.nombre}">Nombre Cliente</b><br>
+                <span style="color: var(--mu); font-weight: 600;"
+                    th:text="${clienteSeleccionado.rut} + ' · ' + ${clienteSeleccionado.email} + (${clienteSeleccionado.telefono != null} ? ' · ' + ${clienteSeleccionado.telefono} : '')">
+                    RUT · Correo
+                </span>
+            </div>
+            <a th:href="@{/pedidos}" class="btn o sm">Ver todos los pedidos</a>
+        </div>
+
+        <!-- Selector de Filtro de Cliente -->
+        <div class="tools">
+            <label style="margin: 0; align-self: center;">Filtrar por cliente:</label>
+            <select class="in" onchange="if(this.value) window.location.href=this.value;">
+                <option th:value="@{/pedidos}">-- Todos los clientes --</option>
+                <option th:each="c : ${clientes}"
+                    th:value="@{'/pedidos/cliente/' + ${c.id}}"
+                    th:selected="${clienteSeleccionado != null and clienteSeleccionado.id == c.id}"
+                    th:text="${c.nombre} + ' (' + ${c.rut} + ')'">
+                    Cliente
+                </option>
+            </select>
+        </div>
+
+        <div class="card tw">
+            <table>
+                <thead>
+                    <tr>
+                        <th>N° Pedido</th>
+                        <th>Cliente</th>
+                        <th>Fecha y hora</th>
+                        <th>Ítems</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(pedidos)}">
+                        <td colspan="7" style="text-align: center; padding: 25px; color: var(--mu);">
+                            No hay pedidos registrados para mostrar en esta vista.
+                        </td>
+                    </tr>
+                    <tr th:each="p : ${pedidos}">
+                        <td><b th:text="'#' + ${p.id}">#1042</b></td>
+                        <td>
+                            <strong th:text="${p.cliente.nombre}">Cliente</strong>
+                            <div style="font-size: 12px; color: var(--mu);" th:text="${p.cliente.rut}">RUT</div>
+                        </td>
+                        <td th:text="${#temporals.format(p.fechaCreacion, 'dd/MM/yyyy HH:mm')}">09/10/2026 14:32</td>
+                        <td>
+                            <span class="tag gr" th:text="${#lists.size(p.detalles)} + ' producto(s)'">2 producto(s)</span>
+                        </td>
+                        <td><b th:text="'$' + ${#numbers.formatDecimal(p.total, 0, 'POINT', 0, 'POINT')}">$0</b></td>
+                        <td>
+                            <span class="tag"
+                                th:classappend="${p.estado == 'PENDIENTE' ? 'pe' : (p.estado == 'PAGADO' ? 'wa' : (p.estado == 'ENVIADO' ? 'ok' : 'er'))}"
+                                th:text="${p.estado}">PENDIENTE</span>
+                        </td>
+                        <td>
+                            <a th:href="@{'/pedidos/' + ${p.id}}" class="btn o sm">Ver detalle</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+</body>
+
+</html>

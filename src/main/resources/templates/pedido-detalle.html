@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="~{fragments :: head('StockFlow - Detalle de Pedido')}"></head>
+
+<body>
+
+    <header th:replace="~{fragments :: header('ped')}"></header>
+
+    <main>
+        <!-- Notificaciones Flash -->
+        <div class="alert ok" th:if="${exito}" th:text="${exito}"></div>
+        <div class="alert er" th:if="${error}" th:text="${error}"></div>
+
+        <div class="hero h4">
+            <div>
+                <h1 th:text="'Pedido #' + ${pedido.id}">Pedido #0</h1>
+                <p th:text="${pedido.cliente.nombre} + ' · Registrado el ' + ${#temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm')}">
+                    Cliente · Fecha
+                </p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <!-- Acciones según estado actual -->
+                <th:block th:if="${pedido.estado == 'PENDIENTE'}">
+                    <form th:action="@{'/pedidos/' + ${pedido.id} + '/estado'}" method="post">
+                        <input type="hidden" name="nuevoEstado" value="PAGADO">
+                        <button type="submit" class="btn">Marcar como PAGADO</button>
+                    </form>
+                    <form th:action="@{'/pedidos/' + ${pedido.id} + '/estado'}" method="post"
+                        onsubmit="return confirm('¿Seguro que deseas cancelar este pedido? Las unidades reservadas se restituirán al inventario.')">
+                        <input type="hidden" name="nuevoEstado" value="CANCELADO">
+                        <button type="submit" class="btn o">Cancelar pedido</button>
+                    </form>
+                </th:block>
+
+                <th:block th:if="${pedido.estado == 'PAGADO'}">
+                    <form th:action="@{'/pedidos/' + ${pedido.id} + '/estado'}" method="post">
+                        <input type="hidden" name="nuevoEstado" value="ENVIADO">
+                        <button type="submit" class="btn">Marcar como ENVIADO</button>
+                    </form>
+                    <form th:action="@{'/pedidos/' + ${pedido.id} + '/estado'}" method="post"
+                        onsubmit="return confirm('¿Seguro que deseas cancelar este pedido? Las unidades reservadas se restituirán al inventario.')">
+                        <input type="hidden" name="nuevoEstado" value="CANCELADO">
+                        <button type="submit" class="btn o">Cancelar pedido</button>
+                    </form>
+                </th:block>
+
+                <th:block th:if="${pedido.estado == 'ENVIADO'}">
+                    <span class="tag ok" style="padding: 10px 18px; font-size: 14px;">✓ Pedido Enviado y Finalizado</span>
+                </th:block>
+
+                <th:block th:if="${pedido.estado == 'CANCELADO'}">
+                    <span class="tag er" style="padding: 10px 18px; font-size: 14px;">✕ Pedido Cancelado (Stock devuelto)</span>
+                </th:block>
+            </div>
+        </div>
+
+        <!-- Barra de Avance del Pedido -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h3>Avance del Pedido</h3>
+            <div class="steps">
+                <span class="tag"
+                    th:classappend="${pedido.estado != 'CANCELADO' ? 'pe' : 'gr'}">1. PENDIENTE</span>
+                <span>→</span>
+                <span class="tag"
+                    th:classappend="${pedido.estado == 'PAGADO' or pedido.estado == 'ENVIADO' ? 'ok' : 'gr'}">2. PAGADO</span>
+                <span>→</span>
+                <span class="tag"
+                    th:classappend="${pedido.estado == 'ENVIADO' ? 'ok' : 'gr'}">3. ENVIADO</span>
+
+                <span th:if="${pedido.estado == 'CANCELADO'}" class="tag er" style="margin-left: auto;">
+                    ESTADO: CANCELADO
+                </span>
+            </div>
+        </div>
+
+        <div class="grid g2">
+            <!-- Columna Izquierda: Ítems del Pedido -->
+            <div class="card">
+                <h3>Ítems del Pedido</h3>
+                <div class="tw">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio Unit.</th>
+                                <th>Cant.</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="det : ${pedido.detalles}">
+                                <td>
+                                    <strong th:text="${det.producto != null ? det.producto.nombre : 'Producto Eliminado'}">Nombre</strong>
+                                    <div th:if="${det.producto != null}" style="font-size: 12px; color: var(--mu);"
+                                        th:text="${det.producto.sku}">SKU-001</div>
+                                </td>
+                                <td><b th:text="'$' + ${#numbers.formatDecimal(det.precioUnitario, 0, 'POINT', 0, 'POINT')}">$0</b></td>
+                                <td><b th:text="${det.cantidad}">1</b></td>
+                                <td><b th:text="'$' + ${#numbers.formatDecimal(det.subtotal, 0, 'POINT', 0, 'POINT')}">$0</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row tot" style="margin-top: 14px; padding-top: 10px; border-top: 2px dashed var(--bd);">
+                    <span>Total del pedido</span>
+                    <b th:text="'$' + ${#numbers.formatDecimal(pedido.total, 0, 'POINT', 0, 'POINT')}">$0</b>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Datos del Cliente y Trazabilidad -->
+            <div class="card" style="background: #fff0d6; align-self: start;">
+                <h3>Cliente y Trazabilidad</h3>
+
+                <div style="margin-bottom: 14px;">
+                    <span class="av"
+                        th:text="${#strings.length(pedido.cliente.nombre) >= 2 ? #strings.substring(pedido.cliente.nombre, 0, 2).toUpperCase() : 'CL'}">CL</span>
+                    <strong th:text="${pedido.cliente.nombre}">Nombre Cliente</strong>
+                    <div style="font-size: 13px; color: var(--mu); margin-top: 4px;"
+                        th:text="${pedido.cliente.rut} + ' · ' + ${pedido.cliente.email}">RUT · Correo</div>
+                    <div th:if="${pedido.cliente.telefono}" style="font-size: 13px; color: var(--mu);"
+                        th:text="'Teléfono: ' + ${pedido.cliente.telefono}">Teléfono</div>
+                </div>
+
+                <div class="row">
+                    <span>N° Referencia</span>
+                    <b th:text="'#' + ${pedido.id}">#1042</b>
+                </div>
+                <div class="row">
+                    <span>Fecha Registro</span>
+                    <span style="color: var(--mu);" th:text="${#temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm:ss')}">Fecha</span>
+                </div>
+                <div class="row">
+                    <span>Estado Actual</span>
+                    <span class="tag"
+                        th:classappend="${pedido.estado == 'PENDIENTE' ? 'pe' : (pedido.estado == 'PAGADO' ? 'wa' : (pedido.estado == 'ENVIADO' ? 'ok' : 'er'))}"
+                        th:text="${pedido.estado}">PENDIENTE</span>
+                </div>
+                <div class="row">
+                    <span>Total de Líneas</span>
+                    <b th:text="${#lists.size(pedido.detalles)}">0</b>
+                </div>
+
+                <a th:href="@{'/pedidos/cliente/' + ${pedido.cliente.id}}" class="btn o sm"
+                    style="margin-top: 18px; width: 100%; justify-content: center;">
+                    Ver otros pedidos de este cliente
+                </a>
+                <a th:href="@{/pedidos}" class="btn sm"
+                    style="margin-top: 8px; width: 100%; justify-content: center;">
+                    Volver al listado general
+                </a>
+            </div>
+        </div>
+    </main>
+
+</body>
+
+</html>

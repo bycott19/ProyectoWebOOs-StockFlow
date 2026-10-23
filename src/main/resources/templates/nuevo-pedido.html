@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="~{fragments :: head('StockFlow - Nuevo Pedido')}"></head>
+
+<body>
+
+    <header th:replace="~{fragments :: header('new')}"></header>
+
+    <main>
+        <div class="hero h3">
+            <div>
+                <h1>Nuevo Pedido</h1>
+                <p>El inventario se valida y descuenta atómicamente al confirmar el registro</p>
+            </div>
+            <a th:href="@{/pedidos}" class="btn o">Ver todos los pedidos</a>
+        </div>
+
+        <!-- Mensajes de Alerta -->
+        <div class="alert er" th:if="${error}" th:text="${error}"></div>
+        <div class="alert ok" th:if="${exito}" th:text="${exito}"></div>
+
+        <form id="formPedido" th:action="@{/pedidos/guardar}" method="post">
+            <div class="grid g2">
+                <!-- Columna Izquierda: Configuración del Pedido -->
+                <div class="card">
+                    <label for="clienteSelect">1. Seleccionar Cliente</label>
+                    <select id="clienteSelect" name="clienteId" class="fld" required>
+                        <option value="" disabled selected>-- Elige un cliente --</option>
+                        <option th:each="c : ${clientes}" th:value="${c.id}"
+                            th:text="${c.nombre} + ' · ' + ${c.rut} + ' (' + ${c.email} + ')'">
+                            Cliente Ejemplo
+                        </option>
+                    </select>
+
+                    <label style="margin-top: 10px;">2. Agregar Productos al Pedido</label>
+                    <div class="tools" style="align-items: flex-start;">
+                        <div style="flex: 2; min-width: 220px;">
+                            <select id="productoSelect" class="fld" onchange="alCambiarProducto()">
+                                <option value="" disabled selected>-- Elige un producto --</option>
+                                <option th:each="p : ${productos}" th:value="${p.id}"
+                                    th:data-nombre="${p.nombre}"
+                                    th:data-sku="${p.sku}"
+                                    th:data-precio="${p.precio}"
+                                    th:data-stock="${p.stockActual}"
+                                    th:disabled="${p.stockActual <= 0}"
+                                    th:text="${p.nombre} + ' (' + ${p.sku} + ') - $' + ${#numbers.formatDecimal(p.precio, 0, 'POINT', 0, 'POINT')} + ' [Stock: ' + ${p.stockActual} + ']'">
+                                    Teclado Mecánico
+                                </option>
+                            </select>
+                        </div>
+                        <div style="width: 100px;">
+                            <input type="number" id="cantidadInput" class="fld" min="1" value="1" placeholder="Cant.">
+                        </div>
+                        <button type="button" class="btn" onclick="agregarItem()">+ Agregar</button>
+                    </div>
+
+                    <div id="infoStock" style="margin-bottom: 14px; font-weight: 700; font-size: 13px; color: var(--mu);">
+                        Selecciona un producto para verificar su disponibilidad actual.
+                    </div>
+
+                    <div class="tw">
+                        <table id="tablaItems">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Precio</th>
+                                    <th>Cant.</th>
+                                    <th>Subtotal</th>
+                                    <th>Stock</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsBody">
+                                <tr id="filaVacia">
+                                    <td colspan="6" style="text-align: center; padding: 25px; color: var(--mu);">
+                                        Aún no has agregado ningún producto a este pedido.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Resumen de Compra -->
+                <div class="card" style="background: #fff0d6; align-self: start;">
+                    <h3>Resumen del Pedido</h3>
+                    <div class="row">
+                        <span>Líneas de producto</span>
+                        <b id="resumenLineas">0</b>
+                    </div>
+                    <div class="row">
+                        <span>Unidades totales</span>
+                        <b id="resumenUnidades">0</b>
+                    </div>
+                    <div class="row tot">
+                        <span>Total a pagar</span>
+                        <b id="resumenTotal" style="color: var(--ink);">$0</b>
+                    </div>
+
+                    <div class="alert" style="background: #ffc3b0; margin-top: 18px; font-size: 13px;">
+                        <strong>Garantía de inventario:</strong> Si algún artículo supera el stock disponible en bodega, la transacción se cancelará de forma íntegra.
+                    </div>
+
+                    <button type="submit" id="btnSubmit" class="btn" style="width: 100%; justify-content: center;" disabled>
+                        Confirmar y Registrar Pedido
+                    </button>
+                    <p class="note">Estado inicial: PENDIENTE. Los detalles se guardan con CascadeType.ALL.</p>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        let items = [];
+
+        function alCambiarProducto() {
+            const select = document.getElementById('productoSelect');
+            const opt = select.options[select.selectedIndex];
+            const stock = parseInt(opt.dataset.stock);
+            const info = document.getElementById('infoStock');
+            const cantInput = document.getElementById('cantidadInput');
+
+            if (stock <= 0) {
+                info.innerHTML = '<span class="tag er">Sin stock disponible en bodega</span>';
+                cantInput.max = 0;
+            } else if (stock <= 5) {
+                info.innerHTML = '<span class="tag wa">¡Últimas unidades! Solo quedan ' + stock + ' en inventario</span>';
+                cantInput.max = stock;
+            } else {
+                info.innerHTML = '<span class="tag ok">Disponible (' + stock + ' unidades en bodega)</span>';
+                cantInput.max = stock;
+            }
+        }
+
+        function formatoCLP(valor) {
+            return '$' + Math.round(valor).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function agregarItem() {
+            const select = document.getElementById('productoSelect');
+            if (select.selectedIndex <= 0) {
+                alert('Por favor selecciona un producto');
+                return;
+            }
+
+            const opt = select.options[select.selectedIndex];
+            const prodId = parseInt(opt.value);
+            const nombre = opt.dataset.nombre;
+            const sku = opt.dataset.sku;
+            const precio = parseFloat(opt.dataset.precio);
+            const stockActual = parseInt(opt.dataset.stock);
+            const cantidad = parseInt(document.getElementById('cantidadInput').value);
+
+            if (isNaN(cantidad) || cantidad <= 0) {
+                alert('La cantidad debe ser al menos 1.');
+                return;
+            }
+
+            // Verificar si ya existe en la lista
+            const indexExistente = items.findIndex(it => it.productoId === prodId);
+            const cantidadPrevia = indexExistente >= 0 ? items[indexExistente].cantidad : 0;
+            const nuevaCantidad = cantidadPrevia + cantidad;
+
+            if (nuevaCantidad > stockActual) {
+                alert('No puedes agregar ' + cantidad + ' unidad(es) más. El stock disponible es de ' + stockActual + ' y ya tienes ' + cantidadPrevia + ' en el pedido.');
+                return;
+            }
+
+            if (indexExistente >= 0) {
+                items[indexExistente].cantidad = nuevaCantidad;
+                items[indexExistente].subtotal = nuevaCantidad * precio;
+            } else {
+                items.push({
+                    productoId: prodId,
+                    nombre: nombre,
+                    sku: sku,
+                    precio: precio,
+                    stockActual: stockActual,
+                    cantidad: cantidad,
+                    subtotal: cantidad * precio
+                });
+            }
+
+            renderizarTabla();
+            document.getElementById('cantidadInput').value = 1;
+        }
+
+        function quitarItem(index) {
+            items.splice(index, 1);
+            renderizarTabla();
+        }
+
+        function renderizarTabla() {
+            const tbody = document.getElementById('itemsBody');
+            tbody.innerHTML = '';
+
+            if (items.length === 0) {
+                tbody.innerHTML = '<tr id="filaVacia"><td colspan="6" style="text-align: center; padding: 25px; color: var(--mu);">Aún no has agregado ningún producto a este pedido.</td></tr>';
+                document.getElementById('resumenLineas').innerText = '0';
+                document.getElementById('resumenUnidades').innerText = '0';
+                document.getElementById('resumenTotal').innerText = '$0';
+                document.getElementById('btnSubmit').disabled = true;
+                return;
+            }
+
+            let totalUnidades = 0;
+            let totalMonto = 0;
+
+            items.forEach((item, idx) => {
+                totalUnidades += item.cantidad;
+                totalMonto += item.subtotal;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <strong>${item.nombre}</strong>
+                        <div style="font-size:12px; color:var(--mu);">${item.sku}</div>
+                        <input type="hidden" name="productoId" value="${item.productoId}">
+                        <input type="hidden" name="cantidad" value="${item.cantidad}">
+                    </td>
+                    <td><b>${formatoCLP(item.precio)}</b></td>
+                    <td><b>${item.cantidad}</b></td>
+                    <td><b>${formatoCLP(item.subtotal)}</b></td>
+                    <td><span class="tag ${item.cantidad >= item.stockActual ? 'wa' : 'ok'}">${item.stockActual} disp.</span></td>
+                    <td>
+                        <button type="button" class="btn danger sm" onclick="quitarItem(${idx})">Quitar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('resumenLineas').innerText = items.length;
+            document.getElementById('resumenUnidades').innerText = totalUnidades;
+            document.getElementById('resumenTotal').innerText = formatoCLP(totalMonto);
+            document.getElementById('btnSubmit').disabled = false;
+        }
+    </script>
+
+</body>
+
+</html>

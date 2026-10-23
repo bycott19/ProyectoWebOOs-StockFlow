@@ -36,7 +36,7 @@ public class Producto {
     @Column(name = "stock_minimo", nullable = false)
     private Integer stockMinimo;
 
-    @Column(name = "fecha_actualizacion", nullable = false, updatable = false)
+    @Column(name = "fecha_actualizacion", nullable = false)
     private LocalDateTime fechaActualizacion;
 
     @PrePersist

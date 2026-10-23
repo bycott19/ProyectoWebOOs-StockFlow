@@ -17,6 +17,9 @@
         <a th:href="@{/}" th:class="${activePage == 'dash'} ? 'on' : ''">Inicio</a>
         <a th:href="@{/productos}" th:class="${activePage == 'prod'} ? 'on' : ''">Productos</a>
         <a th:href="@{/stock-bajo}" th:class="${activePage == 'alert'} ? 'on' : ''">Stock bajo</a>
+        <a th:href="@{/clientes}" th:class="${activePage == 'cli'} ? 'on' : ''">Clientes</a>
+        <a th:href="@{/pedidos/nuevo}" th:class="${activePage == 'new'} ? 'on' : ''">Nuevo pedido</a>
+        <a th:href="@{/pedidos}" th:class="${activePage == 'ped'} ? 'on' : ''">Pedidos</a>
     </nav>
 </header>
 

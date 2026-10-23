@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="~{fragments :: head('StockFlow - Clientes')}"></head>
+
+<body>
+
+    <header th:replace="~{fragments :: header('cli')}"></header>
+
+    <main>
+        <!-- Notificaciones de éxito o error de validación -->
+        <div class="alert ok" th:if="${exito}" th:text="${exito}"></div>
+        <div class="alert er" th:if="${error}" th:text="${error}"></div>
+
+        <div class="hero h4">
+            <div>
+                <h1>Clientes</h1>
+                <p>Registro y cartera de clientes de GlobalRetail S.A.</p>
+            </div>
+            <button class="btn o" onclick="abrirModalCrear()">+ Agregar cliente</button>
+        </div>
+
+        <div class="tools">
+            <input type="text" id="busqueda" class="in f" placeholder="Buscar por nombre, RUT o correo..."
+                onkeyup="filtrarTabla()">
+        </div>
+
+        <div class="card tw">
+            <table id="tablaClientes">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>RUT</th>
+                        <th>Correo electrónico</th>
+                        <th>Teléfono</th>
+                        <th>Historial</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(clientes)}">
+                        <td colspan="6" style="text-align:center; padding: 25px; color: var(--mu);">
+                            No hay clientes registrados en la base de datos
+                        </td>
+                    </tr>
+                    <tr th:each="c : ${clientes}">
+                        <td>
+                            <span class="av" th:text="${c.nombre != null and #strings.length(c.nombre) >= 2 ? #strings.substring(c.nombre, 0, 2).toUpperCase() : 'CL'}">CR</span>
+                            <strong th:text="${c.nombre}">Nombre</strong>
+                        </td>
+                        <td><b th:text="${c.rut}">11111111-1</b></td>
+                        <td th:text="${c.email}">correo@mail.cl</td>
+                        <td th:text="${c.telefono != null and !#strings.isEmpty(c.telefono) ? c.telefono : '-'}">+56912345678</td>
+                        <td>
+                            <a th:href="@{'/pedidos/cliente/' + ${c.id}}" class="btn o sm">
+                                Ver pedidos
+                            </a>
+                        </td>
+                        <td>
+                            <div style="display:flex; gap:6px;">
+                                <button class="btn o sm" th:data-id="${c.id}" th:data-nombre="${c.nombre}"
+                                    th:data-rut="${c.rut}" th:data-email="${c.email}"
+                                    th:data-telefono="${c.telefono}" onclick="abrirModalEditar(this)">Editar</button>
+                                <form th:action="@{'/clientes/' + ${c.id} + '/eliminar'}" method="post"
+                                    onsubmit="return confirm('¿Seguro que deseas eliminar este cliente? Se eliminarán también sus pedidos asociados si existen.')">
+                                    <button type="submit" class="btn danger sm">Eliminar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal Crear / Editar Cliente -->
+    <div id="modalCliente" class="modal-overlay">
+        <div class="modal-box">
+            <h2 id="modalTitulo" style="margin-bottom: 16px;">Nuevo Cliente</h2>
+            <form id="formCliente" th:action="@{/clientes/guardar}" method="post">
+                <input type="hidden" id="cliId" name="id">
+
+                <label>Nombre Completo</label>
+                <input type="text" id="cliNombre" name="nombre" class="fld" required placeholder="Ej: Camila Rojas">
+
+                <label>RUT (Identificador único chileno)</label>
+                <input type="text" id="cliRut" name="rut" class="fld" required placeholder="Ej: 19.456.789-2 o 19456789-2">
+                <div style="font-size: 11px; color: var(--mu); margin-top: -12px; margin-bottom: 14px;">Validado automáticamente con algoritmo Módulo 11</div>
+
+                <label>Correo Electrónico</label>
+                <input type="email" id="cliEmail" name="email" class="fld" required placeholder="Ej: camila@mail.cl">
+
+                <label>Teléfono (Opcional)</label>
+                <input type="text" id="cliTelefono" name="telefono" class="fld" placeholder="Ej: +56 9 1234 5678">
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px;">
+                    <button type="button" class="btn o" onclick="cerrarModal()">Cancelar</button>
+                    <button type="submit" class="btn">Guardar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function abrirModalCrear() {
+            document.getElementById('modalTitulo').innerText = 'Nuevo Cliente';
+            document.getElementById('formCliente').reset();
+            document.getElementById('cliId').value = '';
+            document.getElementById('modalCliente').classList.add('open');
+        }
+
+        function abrirModalEditar(btn) {
+            document.getElementById('modalTitulo').innerText = 'Editar Cliente';
+            document.getElementById('cliId').value = btn.dataset.id;
+            document.getElementById('cliNombre').value = btn.dataset.nombre;
+            document.getElementById('cliRut').value = btn.dataset.rut;
+            document.getElementById('cliEmail').value = btn.dataset.email;
+            document.getElementById('cliTelefono').value = btn.dataset.telefono || '';
+            document.getElementById('modalCliente').classList.add('open');
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalCliente').classList.remove('open');
+        }
+
+        function filtrarTabla() {
+            const q = document.getElementById('busqueda').value.toLowerCase();
+            const filas = document.querySelectorAll('#tablaClientes tbody tr');
+            filas.forEach(f => {
+                const texto = f.innerText.toLowerCase();
+                f.style.display = texto.includes(q) ? '' : 'none';
+            });
+        }
+    </script>
+
+</body>
+
+</html>

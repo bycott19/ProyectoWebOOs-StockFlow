@@ -11,7 +11,10 @@
                 <h1>Productos con stock bajo</h1>
                 <p>Monitoreo en tiempo real de artículos bajo el umbral mínimo (RF6)</p>
             </div>
-            <a th:href="@{/productos}" class="btn o">Ir a catálogo general</a>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a th:href="@{/stock-bajo/exportar-csv}" class="btn o">📥 Exportar reporte CSV</a>
+                <a th:href="@{/productos}" class="btn">Catálogo general</a>
+            </div>
         </div>
 
         <div class="alert" th:if="${totalBajoStock > 0}">

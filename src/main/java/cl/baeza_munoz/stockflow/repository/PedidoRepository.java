@@ -9,6 +9,13 @@ import java.util.List;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     
-    // Spring Data JPA crea la consulta SQL automáticamente basándose en el nombre del método
     List<Pedido> findByClienteId(Long clienteId);
+
+    List<Pedido> findByClienteIdOrderByFechaCreacionDesc(Long clienteId);
+
+    long countByEstadoIgnoreCase(String estado);
+
+    List<Pedido> findTop5ByOrderByFechaCreacionDesc();
+
+    List<Pedido> findAllByOrderByFechaCreacionDesc();
 }

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>StockFlow - Mockups</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#fdeed2;--ink:#2b2a4c;--mu:#7a6f8a;--card:#fff6e4;--bd:#efd9b0;--te:#1aa38e;--co:#ff7a59;--mus:#ffc145;--sk:#5fb8e6;--li:#a995ef;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 Nunito,Trebuchet MS,Verdana,sans-serif;min-height:100vh;background-image:radial-gradient(circle at 92% 8%,#ffd9a8 0,transparent 260px),radial-gradient(circle at 4% 96%,#d8efe6 0,transparent 300px)}
+header{display:flex;align-items:center;gap:22px;padding:16px 34px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px}
+.logo i{width:38px;height:38px;border-radius:12px 12px 12px 4px;background:var(--co);display:grid;place-items:center;color:#fff;font-style:normal;transform:rotate(-6deg);box-shadow:3px 3px 0 var(--ink)}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav button{all:unset;cursor:pointer;padding:8px 16px;border-radius:30px;font-weight:700;color:var(--ink);border:2px solid transparent}
+nav button:hover{border-color:var(--ink)}
+nav button.on{background:var(--ink);color:#fff6e4}
+main{padding:6px 34px 40px;max-width:1180px;margin:0 auto}
+.view{display:none}.view.on{display:block}
+.hero{border-radius:24px;padding:24px 28px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink)}
+.h1{background:var(--mus)}.h2{background:var(--te);color:#fff}.h3{background:var(--sk)}.h4{background:var(--li)}.h5{background:var(--co);color:#fff}
+h1{font-size:28px;line-height:1.15}.hero p{opacity:.85;font-weight:600}
+.btn{background:var(--ink);color:#fff6e4;border:2px solid var(--ink);padding:10px 18px;border-radius:30px;font:inherit;font-weight:800;box-shadow:3px 3px 0 rgba(0,0,0,.25)}
+.btn.o{background:#fff6e4;color:var(--ink)}
+.grid{display:grid;gap:18px}.g4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}.g2{grid-template-columns:2fr 1fr}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:20px;padding:20px;box-shadow:5px 5px 0 var(--bd)}
+.kpi{border-radius:20px;padding:18px 20px;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.kpi span{font-weight:700;font-size:13px}.kpi b{display:block;font-size:36px;line-height:1.1;margin:6px 0 2px}.kpi em{font-style:normal;font-size:13px;font-weight:700}
+.k1{background:#ffd9cc}.k2{background:#d3ecf8}.k3{background:#c9efe6}.k4{background:#ffe7a3}
+h3{font-size:18px;margin-bottom:12px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mu);padding:8px 12px;white-space:nowrap}
+td{padding:12px;white-space:nowrap;border-top:2px dashed var(--bd)}
+tr:nth-child(even) td{background:#fff0d6}
+.tag{padding:3px 12px;border-radius:20px;font-size:12px;font-weight:800;border:2px solid var(--ink);display:inline-block}
+.ok{background:#bdeede}.wa{background:#ffe08a}.er{background:#ffc3b0}.pe{background:#bfe3f6}.gr{background:#eee;color:var(--mu);border-color:var(--bd)}
+.tools{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.in{background:#fffdf7;border:2px solid var(--ink);border-radius:30px;padding:9px 16px;color:var(--mu);font-weight:600;min-width:170px}.in.f{flex:1}
+label{display:block;font-size:12px;font-weight:800;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.fld{background:#fffdf7;border:2px solid var(--ink);border-radius:14px;padding:10px 14px;margin-bottom:16px;font-weight:600}
+.av{width:36px;height:36px;border-radius:50%;background:var(--li);border:2px solid var(--ink);display:inline-grid;place-items:center;font-weight:800;margin-right:10px;vertical-align:middle;font-size:13px}
+.alert{padding:14px 18px;border-radius:16px;background:var(--mus);border:2px solid var(--ink);margin-bottom:18px;font-weight:700}
+.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:2px dashed var(--bd);font-weight:600}.row:last-child{border:0}
+.tot{font-size:21px;font-weight:800;border-bottom:0}
+.bar{height:12px;border-radius:12px;background:#fff;border:2px solid var(--ink);overflow:hidden;min-width:90px}.bar i{display:block;height:100%}
+.note{font-size:13px;color:var(--mu);margin-top:14px;font-weight:600}
+.steps{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+@media(max-width:800px){header,main{padding-left:16px;padding-right:16px}.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo"><i>S</i>StockFlow</div>
+<nav>
+<button class="on" data-v="dash">Inicio</button>
+<button data-v="prod">Productos</button>
+<button data-v="alert">Stock bajo</button>
+<button data-v="cli">Clientes</button>
+<button data-v="new">Nuevo pedido</button>
+<button data-v="ped">Pedidos por cliente</button>
+<button data-v="det">Detalle de pedido</button>
+</nav>
+</header>
+<main>
+
+<section class="view on" id="dash">
+<div class="hero h1"><div><h1>Hola, equipo de bodega</h1><p>Así va el inventario y los pedidos de hoy</p></div><button class="btn">+ Nuevo pedido</button></div>
+<div class="grid g4" style="margin-bottom:20px">
+<div class="kpi k3"><span>Productos activos</span><b>248</b><em>+12 este mes</em></div>
+<div class="kpi k2"><span>Pedidos pendientes</span><b>37</b><em>8 llegaron hoy</em></div>
+<div class="kpi k4"><span>Clientes</span><b>1.126</b><em>+54 este mes</em></div>
+<div class="kpi k1"><span>Bajo el stock mínimo</span><b>9</b><em>Hay que reponer</em></div>
+</div>
+<div class="grid g2">
+<div class="card"><h3>Últimos pedidos</h3><div class="tw"><table>
+<tr><th>N°</th><th>Cliente</th><th>Ítems</th><th>Total</th><th>Estado</th></tr>
+<tr><td>#1042</td><td>Camila Rojas</td><td>3</td><td>$84.970</td><td><span class="tag pe">PENDIENTE</span></td></tr>
+<tr><td>#1041</td><td>Diego Fuentes</td><td>1</td><td>$29.990</td><td><span class="tag pe">PENDIENTE</span></td></tr>
+<tr><td>#1040</td><td>Sofía Araya</td><td>5</td><td>$156.400</td><td><span class="tag ok">ENVIADO</span></td></tr>
+<tr><td>#1039</td><td>Tomás Pérez</td><td>2</td><td>$47.800</td><td><span class="tag ok">ENVIADO</span></td></tr>
+</table></div></div>
+<div class="card"><h3>Se está acabando</h3>
+<div class="row"><span>Teclado mecánico K2</span><span class="tag er">3 u.</span></div>
+<div class="row"><span>Mouse inalámbrico M5</span><span class="tag er">5 u.</span></div>
+<div class="row"><span>Audífonos Pro X</span><span class="tag wa">8 u.</span></div>
+<div class="row"><span>Cable USB-C 2m</span><span class="tag wa">10 u.</span></div>
+</div></div>
+</section>
+
+<section class="view" id="prod">
+<div class="hero h2"><div><h1>Productos</h1><p>Catálogo e inventario de la bodega</p></div><button class="btn o">+ Agregar producto</button></div>
+<div class="tools"><div class="in f">Buscar por nombre o SKU...</div><div class="in">Categoría: Todas</div><div class="in">Estado: Todos</div></div>
+<div class="card tw"><table>
+<tr><th>SKU</th><th>Producto</th><th>Precio</th><th>Stock</th><th>Mínimo</th><th>Nivel</th><th>Estado</th><th>Acciones</th></tr>
+<tr><td>TEC-001</td><td>Teclado mecánico K2</td><td>$49.990</td><td>3</td><td>10</td><td><div class="bar"><i style="width:12%;background:var(--co)"></i></div></td><td><span class="tag er">Bajo</span></td><td>Editar · Eliminar</td></tr>
+<tr><td>MOU-014</td><td>Mouse inalámbrico M5</td><td>$19.990</td><td>5</td><td>15</td><td><div class="bar"><i style="width:20%;background:var(--co)"></i></div></td><td><span class="tag er">Bajo</span></td><td>Editar · Eliminar</td></tr>
+<tr><td>AUD-007</td><td>Audífonos Pro X</td><td>$34.990</td><td>8</td><td>10</td><td><div class="bar"><i style="width:45%;background:var(--mus)"></i></div></td><td><span class="tag wa">Atención</span></td><td>Editar · Eliminar</td></tr>
+<tr><td>MON-022</td><td>Monitor 24" Full HD</td><td>$129.990</td><td>46</td><td>10</td><td><div class="bar"><i style="width:85%;background:var(--te)"></i></div></td><td><span class="tag ok">Normal</span></td><td>Editar · Eliminar</td></tr>
+<tr><td>CAB-003</td><td>Cable USB-C 2m</td><td>$5.990</td><td>120</td><td>30</td><td><div class="bar"><i style="width:95%;background:var(--te)"></i></div></td><td><span class="tag ok">Normal</span></td><td>Editar · Eliminar</td></tr>
+</table></div>
+<p class="note">Endpoints: GET, POST, PUT y DELETE sobre /api/productos.</p>
+</section>
+
+<section class="view" id="alert">
+<div class="hero h5"><div><h1>Productos con stock bajo</h1><p>Los que están bajo su mínimo de alerta</p></div><button class="btn o">Exportar reporte</button></div>
+<div class="alert">Hay 9 productos bajo el mínimo. Conviene reponerlos pronto.</div>
+<div class="card tw"><table>
+<tr><th>Producto</th><th>Stock actual</th><th>Stock mínimo</th><th>Faltan</th><th>Urgencia</th></tr>
+<tr><td>Teclado mecánico K2</td><td>3</td><td>10</td><td>7</td><td><span class="tag er">Alta</span></td></tr>
+<tr><td>Mouse inalámbrico M5</td><td>5</td><td>15</td><td>10</td><td><span class="tag er">Alta</span></td></tr>
+<tr><td>Audífonos Pro X</td><td>8</td><td>10</td><td>2</td><td><span class="tag wa">Media</span></td></tr>
+<tr><td>Webcam HD 1080p</td><td>9</td><td>12</td><td>3</td><td><span class="tag wa">Media</span></td></tr>
+</table></div>
+<p class="note">Endpoint: GET /api/productos/stock-bajo.</p>
+</section>
+
+<section class="view" id="cli">
+<div class="hero h4"><div><h1>Clientes</h1><p>Registro de quienes compran en GlobalRetail</p></div><button class="btn o">+ Agregar cliente</button></div>
+<div class="tools"><div class="in f">Buscar por nombre, RUT o correo...</div></div>
+<div class="card tw"><table>
+<tr><th>Cliente</th><th>RUT</th><th>Correo</th><th>Teléfono</th><th>Pedidos</th><th>Acciones</th></tr>
+<tr><td><span class="av">CR</span>Camila Rojas</td><td>19.456.789-2</td><td>camila@mail.cl</td><td>+56 9 1234 5678</td><td>12</td><td>Ver · Editar · Eliminar</td></tr>
+<tr><td><span class="av">DF</span>Diego Fuentes</td><td>18.321.654-K</td><td>diego@mail.cl</td><td>+56 9 8765 4321</td><td>5</td><td>Ver · Editar · Eliminar</td></tr>
+<tr><td><span class="av">SA</span>Sofía Araya</td><td>20.111.222-3</td><td>sofia@mail.cl</td><td>+56 9 5555 1212</td><td>21</td><td>Ver · Editar · Eliminar</td></tr>
+<tr><td><span class="av">TP</span>Tomás Pérez</td><td>17.888.999-5</td><td>tomas@mail.cl</td><td>+56 9 4444 3030</td><td>3</td><td>Ver · Editar · Eliminar</td></tr>
+</table></div>
+<p class="note">Endpoints: GET, POST, PUT y DELETE sobre /api/clientes.</p>
+</section>
+
+<section class="view" id="new">
+<div class="hero h3"><div><h1>Nuevo pedido</h1><p>Se revisa el stock y se descuenta al registrar</p></div></div>
+<div class="grid g2">
+<div class="card">
+<label>Cliente</label><div class="fld">Camila Rojas · 19.456.789-2</div>
+<label>Agregar ítem</label>
+<div class="tools"><div class="in f">Producto: Teclado mecánico K2</div><div class="in" style="min-width:90px">Cant: 2</div><button class="btn">Agregar</button></div>
+<div class="tw"><table>
+<tr><th>Producto</th><th>Precio</th><th>Cant.</th><th>Subtotal</th><th>Stock</th></tr>
+<tr><td>Teclado mecánico K2</td><td>$49.990</td><td>2</td><td>$99.980</td><td><span class="tag er">Solo quedan 3</span></td></tr>
+<tr><td>Cable USB-C 2m</td><td>$5.990</td><td>4</td><td>$23.960</td><td><span class="tag ok">Disponible</span></td></tr>
+</table></div>
+</div>
+<div class="card" style="background:#fff0d6">
+<h3>Resumen</h3>
+<div class="row"><span>Ítems</span><span>2</span></div>
+<div class="row"><span>Unidades</span><span>6</span></div>
+<div class="row tot"><span>Total</span><span>$123.940</span></div>
+<div class="alert" style="margin-top:14px;background:#ffc3b0">Si falta stock en un producto, se rechaza todo el pedido.</div>
+<button class="btn" style="width:100%">Registrar pedido</button>
+<p class="note">Estado inicial: PENDIENTE. La fecha y hora se guardan solas. Los totales se calculan solos. Las cantidades deben ser enteros mayores a cero. Endpoint: POST /api/pedidos.</p>
+</div>
+</div>
+</section>
+
+<section class="view" id="ped">
+<div class="hero h1"><div><h1>Pedidos por cliente</h1><p>Historial de compras de cada cliente</p></div><button class="btn o">Exportar reporte</button></div>
+<div class="card" style="margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+<span class="av" style="width:52px;height:52px;font-size:16px">CR</span>
+<div style="flex:1"><b style="font-size:18px">Camila Rojas</b><br><span style="color:var(--mu);font-weight:600">19.456.789-2 · camila@mail.cl</span></div>
+<div class="in">Cambiar cliente</div>
+</div>
+<div class="card tw"><table>
+<tr><th>N°</th><th>Fecha y hora</th><th>Detalle</th><th>Total</th><th>Estado</th></tr>
+<tr><td>#1042</td><td>09/10/2026 14:32</td><td>Cable USB-C 2m x4, Mouse M5 x1</td><td>$43.950</td><td><span class="tag pe">PENDIENTE</span></td></tr>
+<tr><td>#1018</td><td>28/09/2026 11:05</td><td>Monitor 24" x1</td><td>$129.990</td><td><span class="tag ok">ENVIADO</span></td></tr>
+<tr><td>#0987</td><td>15/09/2026 17:48</td><td>Audífonos Pro X x2</td><td>$69.980</td><td><span class="tag ok">ENVIADO</span></td></tr>
+</table></div>
+<p class="note">Endpoint: GET /api/clientes/{id}/pedidos.</p>
+</section>
+
+<section class="view" id="det">
+<div class="hero h4"><div><h1>Pedido #1042</h1><p>Camila Rojas · Registrado el 09/10/2026 a las 14:32</p></div><div style="display:flex;gap:10px"><button class="btn o">Cancelar pedido</button><button class="btn">Marcar como PAGADO</button></div></div>
+<div class="card" style="margin-bottom:18px"><h3>Avance del pedido</h3>
+<div class="steps"><span class="tag pe">1. PENDIENTE</span><span>→</span><span class="tag gr">2. PAGADO</span><span>→</span><span class="tag gr">3. ENVIADO</span><span class="tag er" style="margin-left:auto">CANCELADO (opcional)</span></div></div>
+<div class="grid g2">
+<div class="card"><h3>Ítems del pedido</h3><div class="tw"><table>
+<tr><th>Producto</th><th>Precio unit.</th><th>Cant.</th><th>Subtotal</th></tr>
+<tr><td>Cable USB-C 2m</td><td>$5.990</td><td>4</td><td>$23.960</td></tr>
+<tr><td>Mouse inalámbrico M5</td><td>$19.990</td><td>1</td><td>$19.990</td></tr>
+</table></div>
+<div class="row tot" style="margin-top:8px"><span>Total del pedido</span><span>$43.950</span></div></div>
+<div class="card" style="background:#fff0d6"><h3>Trazabilidad</h3>
+<div class="row"><span>Pedido creado</span><span style="color:var(--mu)">09/10 14:32</span></div>
+<div class="row"><span>Stock descontado: Cable USB-C</span><span style="color:var(--mu)">09/10 14:32</span></div>
+<div class="row"><span>Stock descontado: Mouse M5</span><span style="color:var(--mu)">09/10 14:32</span></div>
+<p class="note">Endpoint de estado: PUT /api/pedidos/{id}/estado.</p></div>
+</div>
+</section>
+
+</main>
+<script>
+document.querySelectorAll('nav button').forEach(function(b){
+b.addEventListener('click',function(){
+document.querySelectorAll('nav button,.view').forEach(function(e){e.classList.remove('on')});
+b.classList.add('on');document.getElementById(b.dataset.v).classList.add('on');
+});
+});
+</script>
+</body>
+</html>
